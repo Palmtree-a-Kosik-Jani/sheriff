@@ -28,6 +28,7 @@ namespace bead
                     break;
                 }
                 Varos.sher.dontes(varos.varos);
+                varos.WhiskeyEll();
                 varos.felfedez();
                 varos.Jelenit();
                 foreach(var band in Varos.banditak)

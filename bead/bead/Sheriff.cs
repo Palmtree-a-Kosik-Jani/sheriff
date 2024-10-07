@@ -11,7 +11,7 @@ namespace bead
         public int hp = 100;
         public int dmg;
         public int gold = 0;
-        public int x,y;
+        public int x, y;
         public List<Tuple<int, int>> whiskeyLoc = new List<Tuple<int, int>>();
         public int[] townhallLoc = new int[2];
         public bool townHallFelfedezett = false;
@@ -58,6 +58,7 @@ namespace bead
                             lepes(varos, this.x + i, this.y + j);
                             whiskeyLoc.Remove(wp);
                             whiskey.heal(this);
+                            Varos.whiskeyCount--;
                             allapot = "Heal-elődik";
                             return;
                         }
@@ -92,7 +93,7 @@ namespace bead
                     {
                         continue;
                     }
-                    
+
 
                 }
             }
@@ -114,7 +115,8 @@ namespace bead
             }
             if (gold == 5 && townHallFelfedezett)
             {
-                MoveBFS(varos, townhallLoc[0], townhallLoc[1]);
+                List<int[]> felderitpath = BFS_PathFind(varos, townhallLoc[0], townhallLoc[1]);
+                lepes(varos, felderitpath[1][0], felderitpath[1][1]);
                 allapot = "Kimenekít";
                 return;
             }
@@ -167,10 +169,12 @@ namespace bead
 
             if (nearestX != -1 && nearestY != -1)
             {
-                
+
                 try
                 {
-                    MoveBFS(varos, nearestX, nearestY);
+                    //BFS_PathFind(varos, nearestX, nearestY);
+                    List<int[]> felderitpath = BFS_PathFind(varos, nearestX, nearestY);
+                    lepes(varos, felderitpath[1][0], felderitpath[1][1]);
                 }
                 catch (Exception e)
                 {
@@ -194,9 +198,15 @@ namespace bead
                     nearestY = whiskeyLoc[i].Item2;
                     nearestDistance = distance;
                 }
-            }   
+            }
+
+            if (nearestX != -1 && nearestY != -1)
+            {
+                //BFS_PathFind(varos, nearestX, nearestY);
+                List<int[]> felderitpath = BFS_PathFind(varos, nearestX, nearestY);
+                lepes(varos, felderitpath[1][0], felderitpath[1][1]);
+            };
             
-            if (nearestX != -1 && nearestY != -1) MoveBFS(varos, nearestX, nearestY);
         }
 
         private void Veg()
@@ -209,7 +219,7 @@ namespace bead
         public void FelfedezoKorut(VarosElem[,] varos)
         {
             LegkozFelfedezetlen(varos);
-            
+
         }
         private void lepes(VarosElem[,] varos, int ujX, int ujY)
         {
@@ -237,7 +247,7 @@ namespace bead
             {
                 for (int j = 0; j < 25; j++)
                 {
-                    if (!varos[i, j].felfed && varos[i, j] is Ground) 
+                    if (!varos[i, j].felfed && varos[i, j] is Ground)
                     {
                         double distance = Math.Sqrt(Math.Pow(i - x, 2) + Math.Pow(j - y, 2));
                         if (distance < nearestDistance)
@@ -249,101 +259,152 @@ namespace bead
                     }
                 }
             }
-            if (nearestX != -1 && nearestY != -1) MoveBFS(varos, nearestX, nearestY);
+            if (nearestX != -1 && nearestY != -1)
+            {
+                //BFS_PathFind(varos, nearestX, nearestY);
+                List<int[]> felderitpath = BFS_PathFind(varos, nearestX, nearestY);
+                lepes(varos, felderitpath[1][0], felderitpath[1][1]);
+            }
             else if (nearestX == -1 && nearestY == -1) mindentFelfedezett = true;
         }
-        public void MoveBFS(VarosElem[,] varos, int targetX, int targetY)
+        //public void MoveBFS(VarosElem[,] varos, int targetX, int targetY)
+        //{
+        //    Queue<Node> queue = new Queue<Node>();
+
+        //    HashSet<Node> visited = new HashSet<Node>();
+
+        //    Node startNode = new Node(this.x, this.y);
+        //    Node targetNode = new Node(targetX, targetY);
+
+        //    queue.Enqueue(startNode);
+        //    visited.Add(startNode);
+
+        //    while (queue.Count > 0)
+        //    {
+        //        Node currentNode = queue.Dequeue();
+
+        //        if (currentNode.X == targetNode.X && currentNode.Y == targetNode.Y)
+        //        {
+        //            RetracePath(varos, startNode, currentNode);
+        //            return;
+        //        }
+
+        //        foreach (var neighbor in GetNeighbors(varos, currentNode))
+        //        {
+        //            if (!visited.Contains(neighbor))
+        //            {
+        //                visited.Add(neighbor);
+        //                neighbor.Parent = currentNode;
+        //                queue.Enqueue(neighbor);
+        //            }
+        //        }
+        //    }
+
+        //    Console.WriteLine("Nincs érvényes útvonal!");
+        //}
+
+        //private void RetracePath(VarosElem[,] varos, Node startNode, Node endNode)
+        //{
+        //    Node currentNode = endNode;
+
+        //    List<Node> path = new List<Node>();
+
+        //    while (currentNode != startNode)
+        //    {
+        //        path.Add(currentNode);
+        //        currentNode = currentNode.Parent;
+        //    }
+
+        //    path.Reverse();
+
+        //    if (path.Count > 0)
+        //    {
+        //        Node nextStep = path[0];
+        //        lepes(varos, nextStep.X, nextStep.Y);
+        //    }
+        //}
+
+        //private List<Node> GetNeighbors(VarosElem[,] varos, Node node)
+        //{
+        //    List<Node> neighbors = new List<Node>();
+
+        //    int[] dx = { 0, 1, 0, -1, -1, 1, -1, 1 };
+        //    int[] dy = { 1, 0, -1, 0, -1, -1, 1, 1 };
+
+        //    for (int i = 0; i < 8; i++)
+        //    {
+        //        int newX = node.X + dx[i];
+        //        int newY = node.Y + dy[i];
+
+        //        if (newX >= 0 && newX < 25 && newY >= 0 && newY < 25 && varos[newX, newY] is Ground)
+        //        {
+        //            neighbors.Add(new Node(newX, newY));
+        //        }
+        //    }
+
+        //    return neighbors;
+        //}
+        public int[][] directions = new int[][]
+{
+                new int[] { 0, 1 },
+                new int[] { 0, -1 },
+                new int[] { 1, 0 },
+                new int[] { -1, 0 },
+                new int[] { -1, -1 },
+                new int[] { -1, 1 },
+                new int[] { 1, 1 },
+                new int[] { 1, -1 }
+        };
+        public List<int[]> BFS_PathFind(VarosElem[,] cityMap, int targetX, int targetY)
         {
-            // A BFS-hez sor használata, ahol csomópontokat fogunk tárolni
-            Queue<Node> queue = new Queue<Node>();
+            Tuple<int, int> target = new Tuple<int, int>(targetX, targetY);
 
-            // A már feldolgozott csomópontokat ebben tároljuk
-            HashSet<Node> visited = new HashSet<Node>();
+            Queue<(int, int, List<int[]>)> bfsQueue = new Queue<(int, int, List<int[]>)>();
+            bool[,] visitedNodes = new bool[cityMap.GetLength(0), cityMap.GetLength(1)];
 
-            // Kiindulási csomópont
-            Node startNode = new Node(this.x, this.y);
-            Node targetNode = new Node(targetX, targetY);
+            bfsQueue.Enqueue((x, y, new List<int[]>()));
+            visitedNodes[x, y] = true;
 
-            // A kiindulási csomópontot hozzáadjuk a sorhoz
-            queue.Enqueue(startNode);
-            visited.Add(startNode);
-
-            // Amíg van elem a sorban, folytatjuk a keresést
-            while (queue.Count > 0)
+            while (bfsQueue.Count > 0)
             {
-                // Kivesszük a sorból az aktuális csomópontot
-                Node currentNode = queue.Dequeue();
+                var currentNode = bfsQueue.Dequeue();
 
-                // Ha elértük a célt, visszafejtjük az útvonalat
-                if (currentNode.X == targetNode.X && currentNode.Y == targetNode.Y)
+                int posX = currentNode.Item1;
+                int posY = currentNode.Item2;
+
+                List<int[]> currentPath = currentNode.Item3;
+
+                if (target.Item1 == posX && target.Item2 == posY)
                 {
-                    RetracePath(varos, startNode, currentNode);
-                    return;
+                    currentPath.Add(new int[] { posX, posY });
+                    return currentPath;
                 }
 
-                // Megvizsgáljuk a szomszédokat
-                foreach (var neighbor in GetNeighbors(varos, currentNode))
+                foreach (var move in directions)
                 {
-                    // Csak akkor adjuk hozzá, ha még nem jártunk ott
-                    if (!visited.Contains(neighbor))
+                    int newPosX = posX + move[0];
+                    int newPosY = posY + move[1];
+
+                    if (newPosX >= 0 && newPosX < cityMap.GetLength(0) && newPosY >= 0 && newPosY < cityMap.GetLength(1) && !visitedNodes[newPosX, newPosY])
                     {
-                        visited.Add(neighbor);
-                        neighbor.Parent = currentNode;
-                        queue.Enqueue(neighbor);
+                        if (newPosX == target.Item1 && newPosY == target.Item2)
+                        {
+                            List<int[]> completedPath = new List<int[]>(currentPath) { new int[] { posX, posY } };
+                            completedPath.Add(new int[] { newPosX, newPosY });
+                            return completedPath;
+                        }
+
+                        if (cityMap[newPosX, newPosY] is Ground)
+                        {
+                            visitedNodes[newPosX, newPosY] = true;
+                            List<int[]> nextPath = new List<int[]>(currentPath) { new int[] { posX, posY } };
+                            bfsQueue.Enqueue((newPosX, newPosY, nextPath));
+                        }
                     }
                 }
             }
-
-            // Ha ide jutunk, nem találtunk érvényes útvonalat
-            Console.WriteLine("Nincs érvényes útvonal!");
+            return null;
         }
-
-        private void RetracePath(VarosElem[,] varos, Node startNode, Node endNode)
-        {
-            Node currentNode = endNode;
-
-            List<Node> path = new List<Node>();
-
-            // Visszafejtjük az útvonalat a célhoz
-            while (currentNode != startNode)
-            {
-                path.Add(currentNode);
-                currentNode = currentNode.Parent;
-            }
-
-            // Megfordítjuk az útvonalat, hogy a kiindulási pontból a cél felé haladjunk
-            path.Reverse();
-
-            // Megtesszük az első lépést az útvonalon
-            if (path.Count > 0)
-            {
-                Node nextStep = path[0];
-                lepes(varos, nextStep.X, nextStep.Y);
-            }
-        }
-
-        // Szomszédok lekérdezése (ugyanúgy működik, mint az A* algoritmusban)
-        private List<Node> GetNeighbors(VarosElem[,] varos, Node node)
-        {
-            List<Node> neighbors = new List<Node>();
-
-            int[] dx = { 0, 1, 0, -1, -1, 1, -1, 1 };
-            int[] dy = { 1, 0, -1, 0, -1, -1, 1, 1 };
-
-            for (int i = 0; i < 8; i++)
-            {
-                int newX = node.X + dx[i];
-                int newY = node.Y + dy[i];
-
-                if (newX >= 0 && newX < 25 && newY >= 0 && newY < 25 && varos[newX, newY] is Ground)
-                {
-                    neighbors.Add(new Node(newX, newY));
-                }
-            }
-
-            return neighbors;
-        }
-
 
     }
 

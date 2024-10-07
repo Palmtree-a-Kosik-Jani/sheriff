@@ -9,7 +9,7 @@ namespace bead
     class Varos : VarosElem
     {
         public VarosElem[,] varos = new VarosElem[25, 25];
-        public int whiskeyCount = 0;
+        public static int whiskeyCount = 0;
         public static Bandit[] banditak = new Bandit[4];
         public static Sheriff sher;
 
@@ -17,6 +17,7 @@ namespace bead
         {
             do
             {
+                VarosElem[,] varos = new VarosElem[25, 25];
                 barrGen();
             }
             while (!Bejarhato());
@@ -30,7 +31,15 @@ namespace bead
             Jelenit();
 
         }
-
+        public void WhiskeyEll()
+        {
+            
+            if (whiskeyCount < 3) 
+            {
+                int kellWhiskey = 3 - whiskeyCount;
+                WhiskeyGen(kellWhiskey);
+            }
+        }
         private void BanditGen()
         {
             Random random = new Random();
