@@ -1,0 +1,14 @@
+H:\13C\asztali\bead\bead\bin\Debug\bead.exe.config
+H:\13C\asztali\bead\bead\bin\Debug\bead.exe
+H:\13C\asztali\bead\bead\bin\Debug\bead.pdb
+H:\13C\asztali\bead\bead\obj\Debug\bead.csproj.AssemblyReference.cache
+H:\13C\asztali\bead\bead\obj\Debug\bead.csproj.CoreCompileInputs.cache
+H:\13C\asztali\bead\bead\obj\Debug\bead.exe
+H:\13C\asztali\bead\bead\obj\Debug\bead.pdb
+C:\Users\Janiii\Desktop\bead\bead\bin\Debug\bead.exe.config
+C:\Users\Janiii\Desktop\bead\bead\bin\Debug\bead.exe
+C:\Users\Janiii\Desktop\bead\bead\bin\Debug\bead.pdb
+C:\Users\Janiii\Desktop\bead\bead\obj\Debug\bead.csproj.AssemblyReference.cache
+C:\Users\Janiii\Desktop\bead\bead\obj\Debug\bead.csproj.CoreCompileInputs.cache
+C:\Users\Janiii\Desktop\bead\bead\obj\Debug\bead.exe
+C:\Users\Janiii\Desktop\bead\bead\obj\Debug\bead.pdb

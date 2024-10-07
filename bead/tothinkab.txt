@@ -1,0 +1,16 @@
+
+felfedezes:
+felfedezetlen teruletek listaja -> mindig a legelso lesz a pathfindernek beadva
+
+sheriff:
+
+kell az if elagazasok hogy eldontse mikor mit csinal 
+
+felfedez(arany kereses, ha whiskey letarolja a helyet kesobbre, townhallt is)
+tamad(ha banditával találkozik) || kész van
+menekul(ha x hp alatt, whiskey-t keres, ha nincs whiskey akkor felfedez)
+vadaszik(ha felfedezett mindent de nincs meg az 5 arany, ha nincs felfedezetten bandita akkor felfedez)
+kimenekit(megvan az 5 arany, tudja hol van a townhall, addig felfedez amig nem fedezi fel)
+
+
+
